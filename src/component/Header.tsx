@@ -1,7 +1,10 @@
 import React from 'react'
+import utils from "../lib/utils"
+import { useAccount } from 'wagmi'
 import { useAppKit } from '@reown/appkit/react'
-const Header = () => { // Nhận balance từ props
+const Header = () => {
   const {open} = useAppKit()
+  const { address,  isDisconnected } = useAccount()
   return (
     <div className='p-4 bg-black flex justify-between'>
         <div className='flex items-center space-x-4'>
@@ -15,7 +18,7 @@ const Header = () => { // Nhận balance từ props
         <div>
             <input type='text' placeholder='Search' className="border-r-2 mx-4 p-3 rounded-sm"></input>
             <button className="rounded-md bg-red-500 p-3">Search</button>
-            <button onClick={() => open()}  className='bg-blue-600 mx-3 p-3 rounded-md'>Connect Wallet</button>
+            <button onClick={() => open()}  className='bg-blue-600 mx-3 p-3 rounded-md'>{!isDisconnected ? `${utils(address)}` : "Connect Wallet"}</button>
            
         </div>
     </div>
