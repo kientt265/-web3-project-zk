@@ -4,9 +4,7 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { sepolia, arbitrum } from '@reown/appkit/networks';
-import Header from './component/Header';
 import Main from './component/Main';
-import Footer from './component/Footer';
 import NewHeader from './component/NewHeader'
 import NewFooter from './component/NewFooter'
 
@@ -65,7 +63,8 @@ function App() {
   return (
     <>
       <NewHeader/>
-      <Main/>
+      <Main 
+      />
       <NewFooter/>
     </>
   );
