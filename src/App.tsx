@@ -7,7 +7,11 @@ import { sepolia, arbitrum } from '@reown/appkit/networks';
 import Header from './component/Header';
 import Main from './component/Main';
 import Footer from './component/Footer';
+import NewHeader from './component/NewHeader'
+import NewFooter from './component/NewFooter'
 
+
+// Create a client
 const queryClient = new QueryClient();
 
 interface AppKitProviderProps {
@@ -60,9 +64,9 @@ export function AppKitProvider({ children }: AppKitProviderProps) {
 function App() {
   return (
     <>
-      <Header/>
+      <NewHeader/>
       <Main/>
-      <Footer/>
+      <NewFooter/>
     </>
   );
 }
