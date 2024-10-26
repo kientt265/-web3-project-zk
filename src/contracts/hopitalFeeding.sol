@@ -6,4 +6,6 @@ import "./hopitalFactory.sol";
 contract HopitalFeeding is HopitalFactory{
     
     constructor() HopitalFactory() {}
+    
+
 }
