@@ -12,6 +12,7 @@ contract CrowdFunding is HopitalFactory{
         uint32 endTime;
         string nameHost;
         address adrHost;
+        string scriptCrowd;
     }
 
     mapping(address => bool) public isFunders;
@@ -21,9 +22,14 @@ contract CrowdFunding is HopitalFactory{
     Crowd[] public crowds;
     mapping(uint => address) public crowdToOwner;
     mapping (address => uint) public ownerCrowdCount;
-    function createCrowd(string memory _nameCrowd, uint _target, uint32 _endTime) public {
+
+    modifier onlyDoctor(){
+        require(isDoctor[msg.sender], "only doctors can call this function");
+        _;
+    }
+    function createCrowd(string memory _nameCrowd, uint _target, uint32 _endTime, string memory _scriptCrowd) public onlyDoctor(){
         require(ownerCrowdCount[msg.sender] <= 2, "Only 2 host for 1 doctor!");
-        crowds.push(Crowd(_nameCrowd, _target, _endTime, "Doctor K",msg.sender));
+        crowds.push(Crowd(_nameCrowd, _target, _endTime, "Doctor K",msg.sender, _scriptCrowd));
         uint id = crowds.length - 1 ;
         crowdToOwner[id] = msg.sender;
         ownerCrowdCount[msg.sender]++;
@@ -48,5 +54,8 @@ contract CrowdFunding is HopitalFactory{
     }
     function withDraw() public onlyOwner{
 
+    }
+    function endCrowdfunding() public{
+        
     }
 }

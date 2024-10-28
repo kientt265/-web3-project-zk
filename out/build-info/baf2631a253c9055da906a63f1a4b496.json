@@ -1,0 +1,1 @@
+{"id":"baf2631a253c9055da906a63f1a4b496","source_id_to_path":{"0":"lib/openzeppelin-contracts/contracts/access/Ownable.sol","1":"lib/openzeppelin-contracts/contracts/utils/Context.sol","2":"src/contracts/crowdFunding.sol","3":"src/contracts/hopitalFactory.sol","4":"src/contracts/hopitalRating.sol"},"language":"Solidity"}
