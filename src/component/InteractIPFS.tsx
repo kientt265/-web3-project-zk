@@ -1,63 +1,65 @@
-import express, { Request, Response } from 'express';
-import multer from 'multer';
-import cors from 'cors';
-import { createHelia } from 'helia';
-import { unixfs } from '@helia/unixfs';
-import { CID } from 'multiformats/cid'; 
+// client/src/components/InteractIPFS.tsx
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const app = express();
-const upload = multer();
-app.use(express.json());
-app.use(cors());
+const InteractIPFS: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [fileContent, setFileContent] = useState<string | null>(null);
+  const [cid, setCid] = useState<string | null>(null);
 
-let hashMap = new Map<string, CID>();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
 
-async function run() {
-    const helia = await createHelia();
-    const fs = unixfs(helia);
-    
-    app.post('/upload', upload.single('file'), async (req: Request, res: Response): Promise<void> => {
-        const data = req.file?.buffer; 
-        if (!data) {
-             res.status(400).json({ message: 'No file uploaded' });
-             return;
-        }
+  const handleUpload = async () => {
+    if (!file) return;
 
-        const cid = await fs.addBytes(data);
-        if (!req.file) {
-             res.status(400).json({ message: 'No file uploaded' });
-             return;
-        }
-        hashMap.set(req.file.originalname, cid);  
+    const formData = new FormData();
+    formData.append('file', file);
 
-        res.status(201).json({
-            message: 'Your file has been uploaded',
-            cid: cid.toString() 
-        });
-    });
+    try {
+      const response = await axios.post('http://localhost:7000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(response.data);
+      setCid(response.data.cid);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
 
-    app.get('/fetch/:filename', async (req: Request, res: Response): Promise<void> => {
-        const filename = req.params.filename;
-        const cid = hashMap.get(filename);
+  const handleFetch = async () => {
+    if (!file) return;
 
-        if (!cid) {
-             res.status(404).send('We could not find the file');
-             return;
-        }
+    try {
+      const response = await axios.get(`http://localhost:7000/fetch/${file.name}`);
+      setFileContent(response.data);
+    } catch (error) {
+      console.error('Error fetching file:', error);
+    }
+  };
 
-        let text = '';
-        const decoder = new TextDecoder();
-        for await (const chunk of fs.cat(cid)) {
-            text += decoder.decode(chunk, { stream: true });
-        }
-        text += decoder.decode(); 
+  return (
+    <div>
+      <h1>Interact with IPFS</h1>
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleUpload}>Upload</button>
+      <button onClick={handleFetch}>Fetch</button>
 
-        res.status(200).send(text);
-    });
+      {cid && <p><strong>Uploaded CID:</strong> {cid}</p>}
 
-    app.listen(7000, () => {
-        console.log('I am listening...');
-    });
-}
+      {fileContent && (
+        <div>
+          <h3>File Content:</h3>
+          <pre>{fileContent}</pre>
+        </div>
+      )}
+    </div>
+  );
+};
 
-run();
+export default InteractIPFS;
