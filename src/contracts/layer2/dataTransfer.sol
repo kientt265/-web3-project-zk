@@ -10,18 +10,18 @@ contract DataTransfer {
     mapping(address => Record) private records; // Mapping từ địa chỉ bệnh nhân đến hồ sơ bệnh án
 
     // Lưu mã hash của hồ sơ
-    function storeRecord(string memory ipfsHash) public {
+    function storeRecord(string memory ipfsHash) external  {
         records[msg.sender].ipfsHash = ipfsHash;
     }
 
     // Cấp quyền truy cập cho bác sĩ
-    function grantAccess(address doctor) public {
+    function grantAccess(address doctor) external  {
         require(doctor != address(0), "Invalid doctor address");
         records[msg.sender].authorizedDoctors.push(doctor);
     }
 
     // Thu hồi quyền truy cập của bác sĩ
-    function revokeAccess(address doctor) public {
+    function revokeAccess(address doctor) external  {
         require(doctor != address(0), "Invalid doctor address");
 
         Record storage record = records[msg.sender];

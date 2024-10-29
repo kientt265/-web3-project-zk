@@ -1,10 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
+import "./interfaceLayer2.sol";
 import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
-contract HopitalFactory is Ownable{
+contract HopitalFactory is Ownable {
+
+    IDataTransfer dataTransfer;
 
     event NewUser(uint patientId, string name, uint age);
+    event RecordStored(address indexed patient, string ipfsHash);
+    event AccessGranted(address indexed patient, address indexed doctor);
+    event AccessRevoked(address indexed patient, address indexed doctor);
+
     struct Patient {
         string name;
         uint8 age;
@@ -27,6 +34,10 @@ contract HopitalFactory is Ownable{
     mapping (address => uint) ownerProfileCount;
 
     constructor() Ownable(msg.sender) {}
+
+    function setDataTransferAddress(address _address) external onlyOwner {
+    dataTransfer = IDataTransfer(_address);
+  }
     
     function createProfilePatient(string memory _name, uint8 _age ) public {
         require(ownerProfileCount[msg.sender] == 0, "You already have a patient profile");
@@ -48,5 +59,31 @@ contract HopitalFactory is Ownable{
         isDoctor[msg.sender] = true;
         emit NewUser(id, _name, _age);
 
+    }
+
+    function storeRecord(string memory ipfsHash) external {
+        require(profileToOwner[msg.sender] < patients.length, "You are not a registered patient.");
+        dataTransfer.storeRecord(ipfsHash);
+        emit RecordStored(msg.sender, ipfsHash);
+    }
+
+
+    function grantAccess(address doctor) external {
+        require(isDoctor[doctor], "Address is not a doctor.");
+        dataTransfer.grantAccess(doctor);
+        emit AccessGranted(msg.sender, doctor);
+    }
+
+
+    function revokeAccess(address doctor) external {
+        require(isDoctor[doctor], "Address is not a doctor.");
+        dataTransfer.revokeAccess(doctor);
+        emit AccessRevoked(msg.sender, doctor);
+    }
+
+
+    function getRecord(address patient) external view returns (string memory) {
+        require(isDoctor[msg.sender], "Only doctors can view records.");
+        return dataTransfer.getRecord(patient);
     }
 }
