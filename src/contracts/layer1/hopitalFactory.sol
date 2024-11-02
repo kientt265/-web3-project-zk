@@ -35,7 +35,7 @@ contract HopitalFactory is Ownable {
 
     constructor() Ownable(msg.sender) {}
 
-    function setDataTransferAddress(address _address) external onlyOwner {
+    function setDataTransferAddress(address _address) public onlyOwner {
     dataTransfer = IDataTransfer(_address);
   }
     
@@ -61,29 +61,31 @@ contract HopitalFactory is Ownable {
 
     }
 
-    function storeRecord(string memory ipfsHash) external {
+    function storeRecord(uint _id, string memory ipfsHash) public {
         require(profileToOwner[msg.sender] < patients.length, "You are not a registered patient.");
-        dataTransfer.storeRecord(ipfsHash);
+        dataTransfer.storeRecord(_id, ipfsHash);
         emit RecordStored(msg.sender, ipfsHash);
     }
 
 
-    function grantAccess(address doctor) external {
+    function grantAccess(address doctor) public {
         require(isDoctor[doctor], "Address is not a doctor.");
         dataTransfer.grantAccess(doctor);
         emit AccessGranted(msg.sender, doctor);
     }
 
 
-    function revokeAccess(address doctor) external {
+    function revokeAccess(address doctor) public {
         require(isDoctor[doctor], "Address is not a doctor.");
         dataTransfer.revokeAccess(doctor);
         emit AccessRevoked(msg.sender, doctor);
     }
 
 
-    function getRecord(address patient) external view returns (string memory) {
+    function getRecord(address patient) public view returns (string memory) {
         require(isDoctor[msg.sender], "Only doctors can view records.");
         return dataTransfer.getRecord(patient);
     }
+
+    
 }

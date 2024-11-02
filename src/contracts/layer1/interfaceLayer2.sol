@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 interface IDataTransfer {
 
-    function storeRecord(string memory ipfsHash) external;
+    function storeRecord(uint id, string memory ipfsHash) external;
 
 
     function grantAccess(address doctor) external;
@@ -13,4 +13,7 @@ interface IDataTransfer {
 
 
     function getRecord(address patient) external view returns (string memory);
+
+
+
 }

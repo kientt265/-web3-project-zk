@@ -3,14 +3,16 @@ pragma solidity ^0.8.13;
 
 contract DataTransfer {
      struct Record {
+        uint id;
         string ipfsHash;
         address[] authorizedDoctors;
     }
 
-    mapping(address => Record) private records; // Mapping từ địa chỉ bệnh nhân đến hồ sơ bệnh án
+    mapping(address => Record) public records; // Mapping từ địa chỉ bệnh nhân đến hồ sơ bệnh án
 
     // Lưu mã hash của hồ sơ
-    function storeRecord(string memory ipfsHash) external  {
+    function storeRecord(uint _id, string memory ipfsHash) external  {
+        records[msg.sender].id = _id;
         records[msg.sender].ipfsHash = ipfsHash;
     }
 
@@ -36,7 +38,7 @@ contract DataTransfer {
 
     // Kiểm tra quyền truy cập của bác sĩ và trả về mã hash
     function getRecord(address patient) public view returns (string memory) {
-        require(hasAccess(patient, msg.sender), "You are not authorized to view this record");
+        //require(hasAccess(patient, msg.sender), "You are not authorized to view this record");
         return records[patient].ipfsHash;
     }
 
@@ -52,4 +54,5 @@ contract DataTransfer {
         }
         return false;
     }
+
 }
