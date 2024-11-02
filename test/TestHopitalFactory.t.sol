@@ -52,37 +52,27 @@ contract TestHopitalFactory is Test {
 
     // function test_storeRecord() public {
     //     test_createMember();
-    //     vm.prank(patient);
-    //     hopitalFactory.storeRecord(1, "MaHoSoOfKien");
-    //     (uint id) = dataTransfer.getRecord(patient);
-    //     console.log("Hash new patient: ", id);
-    // }
-    function test_storeRecord() public {
-        test_createMember();
-        vm.startPrank(patient);
-        string memory hashToStore = "MaHoSoOfKien";
-        hopitalFactory.storeRecord(1, hashToStore);
-        vm.stopPrank();
-        // Kiểm tra xem hash đã được lưu trong DataTransfer hay chưa
-        (uint id, string memory ipfsHash) = dataTransfer.records(owner);
-        console.log("Retrieved Hash from DataTransfer: ", ipfsHash);
-        assertEq(ipfsHash, hashToStore, "The stored hash does not match the expected hash.");
+    //     vm.startPrank(patient);
+    //     string memory hashToStore = "MaHoSoOfKien";
+    //     hopitalFactory.storeRecord(1, hashToStore);
+    //     vm.stopPrank();
+    //     // Kiểm tra xem hash đã được lưu trong DataTransfer hay chưa
+    //     (uint id, string memory ipfsHash,,) = dataTransfer.records(patient);
+    //     console.log("Retrieved Hash from DataTransfer: ", ipfsHash);
+    //     assertEq(ipfsHash, hashToStore, "The stored hash does not match the expected hash.");
 
-        assertEq(id, 1, "The stored ID does not match the expected ID.");
-    }
+    //     assertEq(id, 1, "The stored ID does not match the expected ID.");
+    // }
 
     function test_storeRecordL2() public{
         vm.startPrank(owner);
         string memory hashToStore = "MaHoSoOfKien";
         hopitalFactory.storeRecord(1, hashToStore);
-        // string memory retrievedHash = dataTransfer.getRecord(patient);
-        // console.log("Retrieved Hash from DataTransfer: ", retrievedHash);
-        // assertEq(retrievedHash, hashToStore, "The stored hash does not match the expected hash.");
         vm.stopPrank();
-        (uint id, string memory ipfsHash) = dataTransfer.recordsArray(0);
-        // (uint id, string memory ipfsHash) = dataTransfer.records(owner);
+        (uint id, string memory ipfsHash,,) = dataTransfer.records(0);
         console.log("This is ipfsHash", ipfsHash);
         console.log("This is IdNumber: ", id);
+        assertEq(ipfsHash, hashToStore, "The stored hash does not match the expected hash.");
         assertEq(id, 1, "The stored ID does not match the expected ID.");
     }
 }
