@@ -59,4 +59,15 @@ contract DataTransfer {
         }
         return false; 
     }
+      // Hàm để bác sĩ lấy IPFS hash của bệnh nhân
+    function getIpfsHash(address patient) external view returns (string memory) {
+        require(hasAccess(patient, msg.sender), "Unauthorized: No access to patient's record");
+
+        for (uint i = 0; i < records.length; i++) {
+            if (records[i].owner == patient) {
+                return records[i].ipfsHash;
+            }
+        }
+        revert("Record not found for the given patient");
+    }
 }

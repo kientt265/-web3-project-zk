@@ -12,8 +12,7 @@ interface IDataTransfer {
     function revokeAccess(address doctor) external;
 
 
-    function getRecord(address patient) external view returns (string memory);
+    function getIpfsHash(address patient) external view returns (string memory);
 
-    function getId(address patient) external view returns(uint);
 
 }

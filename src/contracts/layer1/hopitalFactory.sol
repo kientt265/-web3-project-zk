@@ -69,7 +69,7 @@ contract HopitalFactory is Ownable {
 
 
     function grantAccess(address doctor) public {
-        require(isDoctor[doctor], "Address is not a doctor.");
+        //require(isDoctor[doctor], "Address is not a doctor.");
         dataTransfer.grantAccess(doctor);
         emit AccessGranted(msg.sender, doctor);
     }
@@ -82,9 +82,9 @@ contract HopitalFactory is Ownable {
     }
 
 
-    function getRecord(address patient) public view returns (string memory) {
+    function getIpfsHash(address patient) public view returns (string memory) {
         require(isDoctor[msg.sender], "Only doctors can view records.");
-        return dataTransfer.getRecord(patient);
+        return dataTransfer.getIpfsHash(patient);
     }
 
     

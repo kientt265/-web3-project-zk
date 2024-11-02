@@ -65,7 +65,8 @@ contract TestHopitalFactory is Test {
     // }
 
     function test_storeRecordL2() public{
-        vm.startPrank(owner);
+        test_createMember();
+        vm.startPrank(patient);
         string memory hashToStore = "MaHoSoOfKien";
         hopitalFactory.storeRecord(1, hashToStore);
         vm.stopPrank();
@@ -74,5 +75,25 @@ contract TestHopitalFactory is Test {
         console.log("This is IdNumber: ", id);
         assertEq(ipfsHash, hashToStore, "The stored hash does not match the expected hash.");
         assertEq(id, 1, "The stored ID does not match the expected ID.");
+    }
+
+    function test_grantAccess() public {
+        test_storeRecordL2();
+        vm.prank(patient);
+        hopitalFactory.grantAccess(doctor);
+
+        (uint id, string memory ipfsHash,address adrDoctor ,) = dataTransfer.records(0);
+        console.log("Doctor will health: ", adrDoctor);
+        assertEq(adrDoctor, doctor);
+    }
+
+    function test_doctorGetIpfsHash() public {
+        test_grantAccess();
+        vm.prank(doctor);
+        hopitalFactory.getIpfsHash(patient);
+
+        (uint id, string memory ipfsHash,address adrDoctor ,) = dataTransfer.records(0);
+        console.log("ipfsHash of Patient: ", ipfsHash);
+        assertEq(ipfsHash, "MaHoSoOfKien");
     }
 }
