@@ -5,7 +5,7 @@ import "./hopitalFactory.sol";
 
 contract CrowdFunding is HopitalFactory{
     event HostCrowdFunding(string  nameCrowd, uint target, uint32 endTime, string  nameDoctorHost);
-    constructor() HopitalFactory() {}
+    constructor(address _owner) HopitalFactory(_owner) {}
     struct Crowd{
         string nameCrowd;
         uint target;

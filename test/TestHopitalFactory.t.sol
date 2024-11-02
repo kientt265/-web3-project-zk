@@ -10,9 +10,79 @@ import {DeployedDataTransfer} from "script/DeployedDataTransfer.s.sol";
 
 contract TestHopitalFactory is Test {
     HopitalFactory hopitalFactory;
-    DeployedHopitalFactory deployer;
+    DataTransfer dataTransfer;
+    DeployedHopitalFactory deployerHopitalFactory;
+    DeployedDataTransfer deployerDataTransfer;
+    uint constant AMOUNT_OF_PATIENT = 10 ether;
+    uint constant AMOUNT_OF_DOCTOR = 10 ether;
+    uint constant AMOUNT_OF_OWNER = 10 ether;
+    address patient = makeAddr("patient");
+    address doctor = makeAddr("doctor");
+    address owner = makeAddr("owner");
     function setUp() external{
-        deployer = new DeployedHopitalFactory();
-        hopitalFactory = deployer.run();
+        vm.prank(owner);
+        deployerHopitalFactory = new DeployedHopitalFactory();
+        hopitalFactory = deployerHopitalFactory.run(owner);
+        
+        vm.prank(owner);
+        deployerDataTransfer = new DeployedDataTransfer();
+        dataTransfer = deployerDataTransfer.run();
+        
+        vm.prank(owner);
+        hopitalFactory.setDataTransferAddress(address(dataTransfer));
+
+        deal(patient, AMOUNT_OF_PATIENT);
+        deal(doctor, AMOUNT_OF_DOCTOR);
+        deal(owner, AMOUNT_OF_OWNER);
+    }
+
+    
+
+    function test_createMember() public {
+        vm.startPrank(patient);
+        hopitalFactory.createProfilePatient("Kien", 21);
+        vm.stopPrank();
+        (string memory name, uint age, ) = hopitalFactory.patients(0);
+        console.log("Name new patient is: ", name);
+
+        vm.startPrank(doctor);
+        hopitalFactory.createProfileDoctor(100001, "Dr Vu", 31);
+        vm.stopPrank();
+    }
+
+    // function test_storeRecord() public {
+    //     test_createMember();
+    //     vm.prank(patient);
+    //     hopitalFactory.storeRecord(1, "MaHoSoOfKien");
+    //     (uint id) = dataTransfer.getRecord(patient);
+    //     console.log("Hash new patient: ", id);
+    // }
+    function test_storeRecord() public {
+        test_createMember();
+        vm.startPrank(patient);
+        string memory hashToStore = "MaHoSoOfKien";
+        hopitalFactory.storeRecord(1, hashToStore);
+        vm.stopPrank();
+        // Kiểm tra xem hash đã được lưu trong DataTransfer hay chưa
+        (uint id, string memory ipfsHash) = dataTransfer.records(owner);
+        console.log("Retrieved Hash from DataTransfer: ", ipfsHash);
+        assertEq(ipfsHash, hashToStore, "The stored hash does not match the expected hash.");
+
+        assertEq(id, 1, "The stored ID does not match the expected ID.");
+    }
+
+    function test_storeRecordL2() public{
+        vm.startPrank(owner);
+        string memory hashToStore = "MaHoSoOfKien";
+        hopitalFactory.storeRecord(1, hashToStore);
+        // string memory retrievedHash = dataTransfer.getRecord(patient);
+        // console.log("Retrieved Hash from DataTransfer: ", retrievedHash);
+        // assertEq(retrievedHash, hashToStore, "The stored hash does not match the expected hash.");
+        vm.stopPrank();
+        (uint id, string memory ipfsHash) = dataTransfer.recordsArray(0);
+        // (uint id, string memory ipfsHash) = dataTransfer.records(owner);
+        console.log("This is ipfsHash", ipfsHash);
+        console.log("This is IdNumber: ", id);
+        assertEq(id, 1, "The stored ID does not match the expected ID.");
     }
 }

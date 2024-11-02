@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import "./crowdFunding.sol";
 
 contract HopitalRating is CrowdFunding{
-    constructor() CrowdFunding() {}
+    constructor(address _owner) CrowdFunding(_owner) {}
     struct DoctorInfo {
         uint8 totalRating;
         uint8 numberOfRatings;

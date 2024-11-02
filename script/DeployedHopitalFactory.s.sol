@@ -5,9 +5,9 @@ import {HopitalFactory} from "src/contracts/layer1/hopitalFactory.sol";
 
 contract DeployedHopitalFactory is Script{
     HopitalFactory hopitalFactory;
-    function run() external returns(HopitalFactory){
+    function run(address _owner) external returns(HopitalFactory){
         vm.startBroadcast();
-        hopitalFactory = new HopitalFactory();
+        hopitalFactory = new HopitalFactory(_owner);
         vm.stopBroadcast();
         return hopitalFactory;
     }

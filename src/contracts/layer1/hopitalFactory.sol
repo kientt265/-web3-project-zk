@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import "./interfaceLayer2.sol";
+import {IDataTransfer} from "./interfaceLayer2.sol";
 import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 contract HopitalFactory is Ownable {
 
-    IDataTransfer dataTransfer;
+    IDataTransfer public dataTransfer;
 
     event NewUser(uint patientId, string name, uint age);
     event RecordStored(address indexed patient, string ipfsHash);
@@ -33,10 +33,10 @@ contract HopitalFactory is Ownable {
     mapping (address => uint) public profileToOwner;
     mapping (address => uint) ownerProfileCount;
 
-    constructor() Ownable(msg.sender) {}
+    constructor(address _owner) Ownable(msg.sender) {}
 
-    function setDataTransferAddress(address _address) public onlyOwner {
-    dataTransfer = IDataTransfer(_address);
+    function setDataTransferAddress(address _address) public  {
+    dataTransfer =  IDataTransfer(_address);
   }
     
     function createProfilePatient(string memory _name, uint8 _age ) public {
@@ -62,7 +62,7 @@ contract HopitalFactory is Ownable {
     }
 
     function storeRecord(uint _id, string memory ipfsHash) public {
-        require(profileToOwner[msg.sender] < patients.length, "You are not a registered patient.");
+        //require(profileToOwner[msg.sender] < patients.length, "You are not a registered patient.");
         dataTransfer.storeRecord(_id, ipfsHash);
         emit RecordStored(msg.sender, ipfsHash);
     }

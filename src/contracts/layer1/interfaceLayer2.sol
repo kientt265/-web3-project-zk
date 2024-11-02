@@ -5,7 +5,7 @@ interface IDataTransfer {
 
     function storeRecord(uint id, string memory ipfsHash) external;
 
-
+    
     function grantAccess(address doctor) external;
 
 
@@ -14,6 +14,6 @@ interface IDataTransfer {
 
     function getRecord(address patient) external view returns (string memory);
 
-
+    function getId(address patient) external view returns(uint);
 
 }
