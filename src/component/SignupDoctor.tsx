@@ -1,10 +1,10 @@
 import React from 'react'
 
-const Signup = () => {
+const SignupDoctor = () => {
   return (
     <div className='bg-white rounded-xl p-5 w-[40%]  m-40 '>
         <div className='flex flex-col items-center gap-2 p-5'>
-            <h2 className='font-bold text-[200%]'>Sign Up</h2>
+            <h2 className='font-bold text-[200%]'>Sign Up For Doctor</h2>
             <p>Already have an account?<a href="#" className='text-blue-700'>Log In here</a></p>
         </div>
         <div className='mt-2'>
@@ -12,12 +12,16 @@ const Signup = () => {
             <input type="text" placeholder='Username' className='rounded  border-2 w-full p-2'/>
         </div>
         <div className='mt-2'>
-            <p>Email Address</p>
-            <input type="text" placeholder='A confirmation code will be sent to this address' className=' p-2 rounded  border-2 w-full'/>
+            <p>Doctor Code</p>
+            <input type="text" placeholder='You will receive this code from the hospital' className=' p-2 rounded  border-2 w-full'/>
         </div>
         <div className='mt-2'>
-            <p>Confirm Email Address</p>
-            <input type="text" placeholder='Re-enter your email address' className='rounded  border-2 w-full p-2'/>
+            <p>Name</p>
+            <input type="text" placeholder='Your Name' className='rounded  border-2 w-full p-2'/>
+        </div>
+        <div className='mt-2'>
+            <p>Age</p>
+            <input type="text" placeholder='Your Age' className='rounded  border-2 w-full p-2'/>
         </div>
         
         <div className='flex flex-col mt-2'>
@@ -48,4 +52,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default SignupDoctor

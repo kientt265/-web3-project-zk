@@ -4,9 +4,11 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { sepolia, arbitrum } from '@reown/appkit/networks';
+import {BrowserRouter as Router} from "react-router-dom"
 import Main from './component/Main';
 import NewHeader from './component/NewHeader'
 import NewFooter from './component/NewFooter'
+import ProfilePatient from './component/ProfilePatient';
 
 
 // Create a client
@@ -61,10 +63,15 @@ export function AppKitProvider({ children }: AppKitProviderProps) {
 
 function App() {
   return (
+    // <>
+    // <Router>
+    //   <NewHeader onLoginClick={() => console.log('Login clicked')} onSignUpClick={() => console.log('Sign up clicked')} onHomeClick={() => console.log('Home')}/>
+    //   <Main />
+    //   <NewFooter/>
+    // </Router>
+    // </>
     <>
-      <NewHeader onLoginClick={() => console.log('Login clicked')} onSignUpClick={() => console.log('Sign up clicked')} onHomeClick={() => console.log('Home')}/>
-      <Main />
-      <NewFooter/>
+    <ProfilePatient/>
     </>
   );
 }
