@@ -90,10 +90,9 @@ contract TestHopitalFactory is Test {
     function test_doctorGetIpfsHash() public {
         test_grantAccess();
         vm.prank(doctor);
-        hopitalFactory.getIpfsHash(patient);
+        string memory ipfs123 = hopitalFactory.getIpfsHash(address(hopitalFactory));
 
         (uint id, string memory ipfsHash,address adrDoctor ,) = dataTransfer.records(0);
-        console.log("ipfsHash of Patient: ", ipfsHash);
-        assertEq(ipfsHash, "MaHoSoOfKien");
+        assertEq(ipfsHash, ipfs123);
     }
 }
