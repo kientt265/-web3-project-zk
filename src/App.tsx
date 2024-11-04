@@ -63,16 +63,14 @@ export function AppKitProvider({ children }: AppKitProviderProps) {
 
 function App() {
   return (
-    // <>
-    // <Router>
-    //   <NewHeader onLoginClick={() => console.log('Login clicked')} onSignUpClick={() => console.log('Sign up clicked')} onHomeClick={() => console.log('Home')}/>
-    //   <Main />
-    //   <NewFooter/>
-    // </Router>
-    // </>
     <>
-    <ProfilePatient/>
+    <Router>
+      <NewHeader onLoginClick={() => console.log('Login clicked')} onSignUpClick={() => console.log('Sign up clicked')} onHomeClick={() => console.log('Home')} />
+      <Main />
+      <NewFooter/>
+    </Router>
     </>
+
   );
 }
 

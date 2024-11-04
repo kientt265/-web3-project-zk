@@ -1,6 +1,15 @@
 import React from 'react'
+import {useNavigate} from 'react-router-dom'
+interface HeaderPropsLogin {
+    onLogedInClick: () => void;
+  }
+  const Login: React.FC<HeaderPropsLogin> = ({onLogedInClick} ) => {
+    const navigate = useNavigate();
+    const handleLoginClick = () => {
+        onLogedInClick();
+        navigate("/logedin");
+      };
 
-const Login = () => {
   return (
     <div className='bg-white rounded-xl p-5 w-[40%]  m-40'>
         <div className='flex flex-col items-center gap-2 p-5 '>
@@ -23,7 +32,7 @@ const Login = () => {
             <p>Remember & Auto Login</p>
         </div>
         <div className='flex justify-center m-5'>
-            <button className='bg-blue-500 rounded-2xl w-full p-2'>LOGIN</button>
+            <button onClick={handleLoginClick} className='bg-blue-500 rounded-2xl w-full p-2' >LOGIN</button>
         </div>
     </div>
   )

@@ -1,11 +1,11 @@
 import React from 'react'
-
+import  { Link } from 'react-router-dom'
 const SignupDoctor = () => {
   return (
     <div className='bg-white rounded-xl p-5 w-[40%]  m-40 '>
         <div className='flex flex-col items-center gap-2 p-5'>
             <h2 className='font-bold text-[200%]'>Sign Up For Doctor</h2>
-            <p>Already have an account?<a href="#" className='text-blue-700'>Log In here</a></p>
+            <p>Already have an account?<Link to="/login" className='text-blue-700'>Log In here</Link></p>
         </div>
         <div className='mt-2'>
             <p>Username</p>
