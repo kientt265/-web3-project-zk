@@ -6,34 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Greeter contract ABI for example
-const ABI = [
-  {
-    inputs: [],
-    name: "greet",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_greeting",
-        type: "string",
-      },
-    ],
-    name: "setGreeting",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-];
+const ABI = process.env.CONTRACT_ABI_L2 || "";
 
 // RPC endpoints
 const L1_RPC_ENDPOINT = "https://rpc2.sepolia.org"; // Check chainlist.org

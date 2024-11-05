@@ -25,14 +25,20 @@ contract HopitalFactory is Ownable {
         address walletAddress;
         uint8 rating;
     }
-
+    struct DoctorInfo {
+        uint8 totalRating;
+        uint8 numberOfRatings;
+    }
     Patient[] public patients;
     Doctor[] public doctors;
 
     mapping(address => bool) internal isDoctor;
     mapping (address => uint) public profileToOwner;
     mapping (address => uint) ownerProfileCount;
-
+    //
+    mapping(address => DoctorInfo) public doctorRatings;
+    mapping(address => mapping(address => bool)) public doctorPatientRecords;
+    //
     constructor(address _owner) Ownable(msg.sender) {}
 
     function setDataTransferAddress(address _address) public  {
@@ -62,16 +68,18 @@ contract HopitalFactory is Ownable {
     }
 
     function storeRecord(uint _id, string memory ipfsHash) public {
-        //require(profileToOwner[msg.sender] < patients.length, "You are not a registered patient.");
+        require(profileToOwner[msg.sender] < patients.length, "You are not a registered patient.");
         dataTransfer.storeRecord(_id, ipfsHash);
         emit RecordStored(msg.sender, ipfsHash);
     }
 
 
     function grantAccess(address doctor) public {
-        //require(isDoctor[doctor], "Address is not a doctor.");
+        require(isDoctor[doctor], "Address is not a doctor.");
         dataTransfer.grantAccess(doctor);
         emit AccessGranted(msg.sender, doctor);
+        require(doctor != address(0), "Invalid doctor address");
+        doctorPatientRecords[msg.sender][doctor] = true;
     }
 
 
@@ -86,6 +94,20 @@ contract HopitalFactory is Ownable {
         require(isDoctor[msg.sender], "Only doctors can view records.");
         return dataTransfer.getIpfsHash(patient);
     }
+    function ratingDoctor(address _walletAddressDoctor, uint8 _rating) public {
+        require(_rating>=1 && _rating <=5, "Only rate from 1 to 5");
+        require(doctorPatientRecords[msg.sender][_walletAddressDoctor], "You haven't been treated by this doctor");
 
+
+        doctorRatings[_walletAddressDoctor].totalRating += _rating;
+        doctorRatings[_walletAddressDoctor].numberOfRatings += 1;
+
+        doctorPatientRecords[msg.sender][_walletAddressDoctor] = false;
+
+        uint index = profileToOwner[_walletAddressDoctor];
+        DoctorInfo memory info = doctorRatings[_walletAddressDoctor];
+        require(info.numberOfRatings == 0);
+        doctors[index].rating = info.totalRating / info.numberOfRatings;
+    }
     
 }
