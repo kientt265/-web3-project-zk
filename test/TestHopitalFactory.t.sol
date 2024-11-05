@@ -95,4 +95,13 @@ contract TestHopitalFactory is Test {
         (uint id, string memory ipfsHash,address adrDoctor ,) = dataTransfer.records(0);
         assertEq(ipfsHash, ipfs123);
     }
+
+    function test_ratingDoctor() public {
+        test_grantAccess();
+        vm.prank(patient);
+        hopitalFactory.ratingDoctor(doctor, 4);
+        (,,,,uint8 ratingDoctor) = hopitalFactory.doctors(0);
+        //uint8 ratingDoctor= doctors[profileToOwner[doctor]].rating;
+        console.log(ratingDoctor);
+    }
 }

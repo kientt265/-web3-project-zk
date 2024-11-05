@@ -43,7 +43,7 @@ contract HopitalFactory is Ownable {
 
     function setDataTransferAddress(address _address) public  {
     dataTransfer =  IDataTransfer(_address);
-  }
+    }
     
     function createProfilePatient(string memory _name, uint8 _age ) public {
         require(ownerProfileCount[msg.sender] == 0, "You already have a patient profile");
@@ -94,10 +94,11 @@ contract HopitalFactory is Ownable {
         require(isDoctor[msg.sender], "Only doctors can view records.");
         return dataTransfer.getIpfsHash(patient);
     }
-    function ratingDoctor(address _walletAddressDoctor, uint8 _rating) public {
-        require(_rating>=1 && _rating <=5, "Only rate from 1 to 5");
-        require(doctorPatientRecords[msg.sender][_walletAddressDoctor], "You haven't been treated by this doctor");
 
+
+    function ratingDoctor(address _walletAddressDoctor, uint8 _rating) public {
+        require(_rating >= 1 && _rating <= 5, "Only rate from 1 to 5");
+        require(doctorPatientRecords[msg.sender][_walletAddressDoctor], "You haven't been treated by this doctor");
 
         doctorRatings[_walletAddressDoctor].totalRating += _rating;
         doctorRatings[_walletAddressDoctor].numberOfRatings += 1;
@@ -106,8 +107,12 @@ contract HopitalFactory is Ownable {
 
         uint index = profileToOwner[_walletAddressDoctor];
         DoctorInfo memory info = doctorRatings[_walletAddressDoctor];
-        require(info.numberOfRatings == 0);
-        doctors[index].rating = info.totalRating / info.numberOfRatings;
+        
+
+        if (info.numberOfRatings > 0) {
+            doctors[index].rating = info.totalRating / info.numberOfRatings;
+        }
     }
+
     
 }
