@@ -4,6 +4,7 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { sepolia, arbitrum } from '@reown/appkit/networks';
+import Proof from './component/Proof'
 import {BrowserRouter as Router} from "react-router-dom"
 import Main from './component/Main';
 import NewHeader from './component/NewHeader'
@@ -64,11 +65,12 @@ export function AppKitProvider({ children }: AppKitProviderProps) {
 function App() {
   return (
     <>
-    <Router>
+    {/* <Router>
       <NewHeader onLoginClick={() => console.log('Login clicked')} onSignUpClick={() => console.log('Sign up clicked')} onHomeClick={() => console.log('Home')} />
       <Main />
       <NewFooter/>
-    </Router>
+    </Router> */}
+    <Proof/>
     </>
 
   );
