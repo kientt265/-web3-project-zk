@@ -4,13 +4,12 @@ import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { sepolia, arbitrum } from '@reown/appkit/networks';
-import Proof from './component/Proof'
 import {BrowserRouter as Router} from "react-router-dom"
 import Main from './component/Main';
 import NewHeader from './component/NewHeader'
 import NewFooter from './component/NewFooter'
 import ProfilePatient from './component/ProfilePatient';
-
+import SnarkjsProof from './component/SnarkjsProof'
 
 // Create a client
 const queryClient = new QueryClient();
@@ -70,7 +69,7 @@ function App() {
       <Main />
       <NewFooter/>
     </Router> */}
-    <Proof/>
+    <SnarkjsProof/>
     </>
 
   );
