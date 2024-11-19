@@ -10,6 +10,7 @@ import NewHeader from './component/NewHeader'
 import NewFooter from './component/NewFooter'
 import ProfilePatient from './component/ProfilePatient';
 import SnarkjsProof from './component/SnarkjsProof'
+import GetInputPatient from './component/GetInputPatient'
 import { Address } from 'viem';
 
 // Create a client
@@ -63,7 +64,7 @@ export function AppKitProvider({ children }: AppKitProviderProps) {
 
 
 function App() {
-  const { address, connector }: { address: Address | undefined; connector: any } = useAccount();
+  // const { address, connector }: { address: Address | undefined; connector: any } = useAccount();
 
   return (
     <>
@@ -73,7 +74,9 @@ function App() {
       <NewFooter/>
     </Router> */}
     {/* <SnarkjsProof signer={connector?.getSigner()} /> */}
-    <SnarkjsProof/>
+    
+    <GetInputPatient/>
+
     </>
 
   );
