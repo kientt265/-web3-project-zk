@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as snarkjs from "snarkjs";
-
+import "ethers;"
 // Define types for proof and public signals
 interface Proof {
   pi_a: [string, string];
@@ -15,7 +15,8 @@ function SnarkjsProof() {
   const [publicSignals, setPublicSignals] = useState<PublicSignal | null>(null);
   const [result, setResult] = useState<string>("");
   const [generateCall, setGenerateCall] = useState<string>("");
-
+  const contractAdr = "0xf9A1a97E853d46aCea4c751e2e5149b09eaA49C1"
+  const contractABI = process.env.CONTRACT_ABI_PROOF_L2
   const calculateProof = async () => {
     setResult("Generating proof...");
 
