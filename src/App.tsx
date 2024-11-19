@@ -1,5 +1,5 @@
 import { createAppKit } from '@reown/appkit/react';
-import { WagmiProvider } from 'wagmi';
+import { WagmiProvider, useAccount } from 'wagmi';
 import React, { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
@@ -10,6 +10,7 @@ import NewHeader from './component/NewHeader'
 import NewFooter from './component/NewFooter'
 import ProfilePatient from './component/ProfilePatient';
 import SnarkjsProof from './component/SnarkjsProof'
+import { Address } from 'viem';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -62,6 +63,8 @@ export function AppKitProvider({ children }: AppKitProviderProps) {
 
 
 function App() {
+  const { address, connector }: { address: Address | undefined; connector: any } = useAccount();
+
   return (
     <>
     {/* <Router>
@@ -69,7 +72,7 @@ function App() {
       <Main />
       <NewFooter/>
     </Router> */}
-    <SnarkjsProof/>
+     <SnarkjsProof signer={connector?.getSigner()} />
     </>
 
   );

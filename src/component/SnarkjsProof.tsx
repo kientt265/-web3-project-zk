@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as snarkjs from "snarkjs";
-import "ethers;"
+import { ethers } from "ethers";
 // Define types for proof and public signals
 interface Proof {
   pi_a: [string, string];
@@ -10,13 +10,17 @@ interface Proof {
 
 type PublicSignal = string[];
 
-function SnarkjsProof() {
+interface SnarkjsProofProps {
+  signer: ethers.Signer;
+}
+
+function SnarkjsProof({ signer }: SnarkjsProofProps) {
   const [proof, setProof] = useState<Proof | null>(null);
   const [publicSignals, setPublicSignals] = useState<PublicSignal | null>(null);
   const [result, setResult] = useState<string>("");
   const [generateCall, setGenerateCall] = useState<string>("");
-  const contractAdr = "0xf9A1a97E853d46aCea4c751e2e5149b09eaA49C1"
-  const contractABI = process.env.CONTRACT_ABI_PROOF_L2
+  const [verificationResult, setVerificationResult] = useState<string>("");
+
   const calculateProof = async () => {
     setResult("Generating proof...");
 
@@ -87,6 +91,32 @@ function SnarkjsProof() {
     }
   };
 
+  const verifyProof = async () => {
+    if (!generateCall) {
+      setVerificationResult("No generate call available.");
+      return;
+    }
+
+    try {
+      const [pi_a, pi_b, pi_c, publicSignals] = JSON.parse(generateCall);
+      const vkeyResponse = await fetch("./prove/verification_key.json");
+      if (!vkeyResponse.ok) throw new Error("Failed to fetch verification key.");
+      const vkey = await vkeyResponse.json();
+      // Create a contract instance
+      const contractAddress = "0xf9A1a97E853d46aCea4c751e2e5149b09eaA49C1"; // Replace with your contract address
+      const contractABI = process.env.CONTRACT_ABI_PROOF_L2; // Ensure this is defined and not undefined
+      if (!contractABI) throw new Error("Contract ABI is not defined.");
+      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+      // Call the verifyProof function
+      const res = await contract.verifyProof(pi_a, pi_b, pi_c, publicSignals);
+      setVerificationResult(res ? "Verification successful!" : "Verification failed.");
+    } catch (error) {
+      console.error("Error verifying proof:", error);
+      setVerificationResult("An error occurred during verification. Please check the console for details.");
+    }
+  };
+
   return (
     <div>
       <h1>Snarkjs Client Example</h1>
@@ -124,6 +154,11 @@ function SnarkjsProof() {
        </button>
 
         <code>{generateCall || "No generate call generated"}</code>
+      </pre>
+
+      <pre>
+        <button onClick={verifyProof} className="bg-red-400">Verify Proof</button>
+        <code>{verificationResult}</code>
       </pre>
     </div>
   );
