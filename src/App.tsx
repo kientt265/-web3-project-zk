@@ -72,7 +72,8 @@ function App() {
       <Main />
       <NewFooter/>
     </Router> */}
-     <SnarkjsProof signer={connector?.getSigner()} />
+    {/* <SnarkjsProof signer={connector?.getSigner()} /> */}
+    <SnarkjsProof/>
     </>
 
   );

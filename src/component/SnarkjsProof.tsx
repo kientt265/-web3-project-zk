@@ -60,15 +60,15 @@ function SnarkjsProof({ signer }: SnarkjsProofProps) {
       ];
 
       const pi_b = [
-        [
-          "0x" + BigInt(proof.pi_b[0][0]).toString(16),
-          "0x" + BigInt(proof.pi_b[0][1]).toString(16),
-        ],
-        [
-          "0x" + BigInt(proof.pi_b[1][0]).toString(16),
-          "0x" + BigInt(proof.pi_b[1][1]).toString(16),
-        ],
-      ];
+                [
+                    '0x' + BigInt(proof.pi_b[0][1]).toString(16), // Đổi vị trí
+                    '0x' + BigInt(proof.pi_b[0][0]).toString(16)  // Đổi vị trí
+                ],
+                [
+                    '0x' + BigInt(proof.pi_b[1][1]).toString(16), // Đổi vị trí
+                    '0x' + BigInt(proof.pi_b[1][0]).toString(16)  // Đổi vị trí
+                ]
+            ];
 
       const pi_c = [
         "0x" + BigInt(proof.pi_c[0]).toString(16),
