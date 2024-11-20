@@ -1,25 +1,31 @@
 import React, { useState } from "react";
-import { JsonRpcProvider, Wallet, Contract } from "ethers";
+import { Contract, Signer } from "ethers";
 import SnarkjsProof from "./SnarkjsProof";
 
-const GetInputPatient: React.FC = () => {
+interface GetInputPatientProp{
+  signer: Signer;
+}
+const GetInputPatient: React.FC<GetInputPatientProp> = ({signer}) => {
   const [age, setAge] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [accountAddress, setAddressWallet] = useState<string | null>(null);
   const contractAdr = import.meta.env.VITE_CONTRACT_ADDRESS_PROFILEPATIENT || "";
   const contractABI = JSON.parse(import.meta.env.VITE_CONTRACT_ABI_PROFILEPATIENT || "[]");
-  const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || "";
-  const privateKey = import.meta.env.VITE_WALLET_PRIVATE_KEY || "";
 
-  const provider = new JsonRpcProvider(rpcUrl); // ethers@6.x
-  const wallet = new Wallet(privateKey, provider);
-  const accountAddress = wallet.address;
-
+  const fetchAddress = async () => {
+    if (signer) {
+        const addressAcc = await signer.getAddress();
+        console.log("Signer Address:", addressAcc);
+        setAddressWallet(addressAcc)
+       
+    }
+  };
+  fetchAddress();
   const getPatientAge = async () => {
     try {
       setLoading(true);
 
-      const contract = new Contract(contractAdr, contractABI, wallet);
+      const contract = new Contract(contractAdr, contractABI, signer);
       const tokenId = await contract.balanceOf(accountAddress);
       const tokenURI = await contract.tokenURI(tokenId);
       const response = await fetch(tokenURI);
@@ -49,7 +55,7 @@ const GetInputPatient: React.FC = () => {
       <button onClick={getPatientAge} className="bg-blue-500">Fetch Age</button>
       {loading && <p>Loading...</p>}
       {age && <p><strong>Age:</strong> {age}</p>}
-      <SnarkjsProof signer={wallet} age = {age} />
+      <SnarkjsProof signer={signer} age = {age} />
     </div>
   );
 };

@@ -64,7 +64,7 @@ export function AppKitProvider({ children }: AppKitProviderProps) {
 
 
 function App() {
-  // const { address, connector }: { address: Address | undefined; connector: any } = useAccount();
+  const { address, connector }: { address: Address | undefined; connector: any } = useAccount();
 
   return (
     <>
@@ -75,7 +75,7 @@ function App() {
     </Router> */}
     {/* <SnarkjsProof signer={connector?.getSigner()} /> */}
     
-    <GetInputPatient/>
+    <GetInputPatient signer={connector?.getSigner()}/>
 
     </>
 

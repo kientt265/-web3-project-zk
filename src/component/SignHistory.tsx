@@ -1,5 +1,5 @@
 
-import { ethers, JsonRpcProvider, Signer} from "ethers";
+import { ethers,  Signer} from "ethers";
 import React, { useEffect, useState } from 'react';
 
 interface ChildComponentProps{

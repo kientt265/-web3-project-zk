@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as snarkjs from "snarkjs";
-import { ethers, JsonRpcProvider, Wallet, Signer } from "ethers";
+import { ethers,  Signer } from "ethers";
 import SignHistory from "./SignHistory"
 // Define types for proof and public signals
 interface Proof {
@@ -17,8 +17,7 @@ interface SnarkjsProofProps {
 }
 
 const SnarkjsProof:React.FC<SnarkjsProofProps> =  ({ signer, age }) => {
-  const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || "";
-  const privateKey = import.meta.env.VITE_WALLET_PRIVATE_KEY || "";
+
         // Create a contract instance
   const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS_VERIFY_L1 || ""; // Replace with your contract address
   const contractABI = JSON.parse(import.meta.env.VITE_CONTRACT_ABI_VERIFY_L1 || "[]"); 
