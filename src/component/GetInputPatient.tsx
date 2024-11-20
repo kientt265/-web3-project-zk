@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { JsonRpcProvider, Wallet, Contract } from "ethers";
+import SnarkjsProof from "./SnarkjsProof";
 
-const GetInputPatient: React.FC<{ onAgeChange: (age: string | null) => void }> = ({ onAgeChange }) => {
+const GetInputPatient: React.FC = () => {
   const [age, setAge] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -33,7 +34,7 @@ const GetInputPatient: React.FC<{ onAgeChange: (age: string | null) => void }> =
       }
 
       setAge(ageAttribute.value);
-      onAgeChange(ageAttribute.value);
+      // onAgeChange(ageAttribute.value);
     } catch (error) {
       console.error("Error fetching age:", error);
       setAge(null);
@@ -48,6 +49,7 @@ const GetInputPatient: React.FC<{ onAgeChange: (age: string | null) => void }> =
       <button onClick={getPatientAge} className="bg-blue-500">Fetch Age</button>
       {loading && <p>Loading...</p>}
       {age && <p><strong>Age:</strong> {age}</p>}
+      <SnarkjsProof signer={wallet} age = {age} />
     </div>
   );
 };

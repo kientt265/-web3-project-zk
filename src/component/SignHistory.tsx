@@ -6,9 +6,9 @@ interface ChildComponentProps{
     signer: Signer;
     proof: string;
     res: string;
-    provider: JsonRpcProvider;
+    // provider: JsonRpcProvider;
 }
-const SignHistory: React.FC<ChildComponentProps> = ({ signer, proof, res, provider }) => {
+const SignHistory: React.FC<ChildComponentProps> = ({ signer, proof, res }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const contractAdr = import.meta.env.VITE_CONTRACT_ADDRESS_HISTORY || "";
     const contractABI = JSON.parse(import.meta.env.VITE_CONTRACT_ABI_HISTORY || "[]");

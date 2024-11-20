@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import * as snarkjs from "snarkjs";
-import { ethers, JsonRpcProvider, Wallet, Contract } from "ethers";
-import GetInputPatient from "./GetInputPatient";
+import { ethers, JsonRpcProvider, Wallet, Signer } from "ethers";
 import SignHistory from "./SignHistory"
 // Define types for proof and public signals
 interface Proof {
@@ -13,18 +12,18 @@ interface Proof {
 type PublicSignal = string[];
 
 interface SnarkjsProofProps {
-  signer: ethers.Signer;
+  signer: Signer;
   age: string | null;
 }
 
-function SnarkjsProof({ signer, age }: SnarkjsProofProps) {
+const SnarkjsProof:React.FC<SnarkjsProofProps> =  ({ signer, age }) => {
   const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || "";
   const privateKey = import.meta.env.VITE_WALLET_PRIVATE_KEY || "";
         // Create a contract instance
   const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS_VERIFY_L1 || ""; // Replace with your contract address
   const contractABI = JSON.parse(import.meta.env.VITE_CONTRACT_ABI_VERIFY_L1 || "[]"); 
-  const provider = new JsonRpcProvider(rpcUrl); // ethers@6.x
-  const wallet = new Wallet(privateKey, provider);
+  // const provider = new JsonRpcProvider(rpcUrl); // ethers@6.x
+  // const wallet = new Wallet(privateKey, provider);
   const [proof, setProof] = useState<Proof | null>(null);
   const [publicSignals, setPublicSignals] = useState<PublicSignal | null>(null);
   const [result, setResult] = useState<string>("");
@@ -105,7 +104,7 @@ function SnarkjsProof({ signer, age }: SnarkjsProofProps) {
 // Ensure this is defined and not undefined
       if (!contractABI) throw new Error("Contract ABI is not defined.");
       
-      const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+      const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
       // Call the verifyProof function
       const res = await contract.verifyProof(pi_a, pi_b, pi_c, publicSignals);
@@ -139,19 +138,18 @@ function SnarkjsProof({ signer, age }: SnarkjsProofProps) {
       </pre>
 
       <pre>
-      <button
-        onClick={() => {
+        <button
+          onClick={() => {
             if (proof && publicSignals) {
-            generateCallFromProof(proof, publicSignals);
+              generateCallFromProof(proof, publicSignals);
             } else {
-            setGenerateCall("Proof or public signals are not available.");
+              setGenerateCall("Proof or public signals are not available.");
             }
-        }}
-        className="bg-green-400"
+          }}
+          className="bg-green-400"
         >
-        Generate Call
-       </button>
-
+          Generate Call
+        </button>
         <code>{generateCall || "No generate call generated"}</code>
       </pre>
 
@@ -159,9 +157,12 @@ function SnarkjsProof({ signer, age }: SnarkjsProofProps) {
         <button onClick={verifyProof} className="bg-red-400">Verify Proof</button>
         <code>{verificationResult}</code>
       </pre>
-      <div>
-        <SignHistory signer={wallet} proof={generateCall} res={verificationResult} provider={provider} />
-      </div>
+
+      {generateCall && verificationResult && (
+        <div>
+          <SignHistory signer={signer} proof={generateCall} res={verificationResult}  />
+        </div>
+      )}
     </div>
   );
 }
