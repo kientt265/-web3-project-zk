@@ -75,7 +75,7 @@ function App() {
     </Router> */}
     {/* <SnarkjsProof signer={connector?.getSigner()} /> */}
     
-    <GetInputPatient/>
+    <SnarkjsProof/>
 
     </>
 

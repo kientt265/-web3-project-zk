@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import * as snarkjs from "snarkjs";
-import { ethers } from "ethers";
+import { ethers, JsonRpcProvider, Wallet, Contract } from "ethers";
+import GetInputPatient from "./GetInputPatient";
 // Define types for proof and public signals
 interface Proof {
   pi_a: [string, string];
@@ -12,9 +13,17 @@ type PublicSignal = string[];
 
 interface SnarkjsProofProps {
   signer: ethers.Signer;
+  age: string | null;
 }
 
-function SnarkjsProof({ signer }: SnarkjsProofProps) {
+function SnarkjsProof({ signer, age }: SnarkjsProofProps) {
+  const rpcUrl = import.meta.env.VITE_SEPOLIA_RPC_URL || "";
+  const privateKey = import.meta.env.VITE_WALLET_PRIVATE_KEY || "";
+        // Create a contract instance
+  const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS_VERIFY_L1 || ""; // Replace with your contract address
+  const contractABI = JSON.parse(import.meta.env.VITE_CONTRACT_ABI_VERIFY_L1 || "[]"); 
+  const provider = new JsonRpcProvider(rpcUrl); // ethers@6.x
+  const wallet = new Wallet(privateKey, provider);
   const [proof, setProof] = useState<Proof | null>(null);
   const [publicSignals, setPublicSignals] = useState<PublicSignal | null>(null);
   const [result, setResult] = useState<string>("");
@@ -26,7 +35,7 @@ function SnarkjsProof({ signer }: SnarkjsProofProps) {
 
     try {
       const { proof, publicSignals } = await snarkjs.groth16.fullProve(
-        { age: 25 },
+        { age: age ? parseInt(age) : 0 },
         "./prove/ageCircuit.wasm",
         "./prove/ageCircuit_0001.zkey"
       );
@@ -99,14 +108,11 @@ function SnarkjsProof({ signer }: SnarkjsProofProps) {
 
     try {
       const [pi_a, pi_b, pi_c, publicSignals] = JSON.parse(generateCall);
-      const vkeyResponse = await fetch("./prove/verification_key.json");
-      if (!vkeyResponse.ok) throw new Error("Failed to fetch verification key.");
-      const vkey = await vkeyResponse.json();
-      // Create a contract instance
-      const contractAddress = "0xf9A1a97E853d46aCea4c751e2e5149b09eaA49C1"; // Replace with your contract address
-      const contractABI = process.env.CONTRACT_ABI_PROOF_L2; // Ensure this is defined and not undefined
+      
+// Ensure this is defined and not undefined
       if (!contractABI) throw new Error("Contract ABI is not defined.");
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+      
+      const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
       // Call the verifyProof function
       const res = await contract.verifyProof(pi_a, pi_b, pi_c, publicSignals);

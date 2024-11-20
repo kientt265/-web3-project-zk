@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { JsonRpcProvider, Wallet, Contract } from "ethers";
 
-const GetInputPatient: React.FC = () => {
+const GetInputPatient: React.FC<{ onAgeChange: (age: string | null) => void }> = ({ onAgeChange }) => {
   const [age, setAge] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -33,6 +33,7 @@ const GetInputPatient: React.FC = () => {
       }
 
       setAge(ageAttribute.value);
+      onAgeChange(ageAttribute.value);
     } catch (error) {
       console.error("Error fetching age:", error);
       setAge(null);
