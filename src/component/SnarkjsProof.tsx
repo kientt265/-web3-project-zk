@@ -44,14 +44,6 @@ function SnarkjsProof({ signer, age }: SnarkjsProofProps) {
       setProof(proof);
       setPublicSignals(publicSignals);
 
-      // Fetch the verification key
-      const vkeyResponse = await fetch("./prove/verification_key.json");
-      if (!vkeyResponse.ok) throw new Error("Failed to fetch verification key.");
-      const vkey = await vkeyResponse.json();
-
-      // Verify the proof
-      const res = await snarkjs.groth16.verify(vkey, publicSignals, proof);
-      setResult(res ? "Verification successful!" : "Verification failed.");
 
       // Generate the generate call
       generateCallFromProof(proof, publicSignals);
