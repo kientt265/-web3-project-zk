@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as snarkjs from "snarkjs";
 import { ethers, JsonRpcProvider, Wallet, Contract } from "ethers";
 import GetInputPatient from "./GetInputPatient";
+import SignHistory from "./SignHistory"
 // Define types for proof and public signals
 interface Proof {
   pi_a: [string, string];
@@ -158,6 +159,9 @@ function SnarkjsProof({ signer, age }: SnarkjsProofProps) {
         <button onClick={verifyProof} className="bg-red-400">Verify Proof</button>
         <code>{verificationResult}</code>
       </pre>
+      <div>
+        <SignHistory signer={wallet} proof={generateCall} res={verificationResult} provider={provider} />
+      </div>
     </div>
   );
 }
