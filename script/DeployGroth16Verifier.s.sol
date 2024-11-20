@@ -9,7 +9,7 @@ contract DeployG16Verify is Script {
 
 
 
-    function run() public returns (Groth16Verifier) {
+    function run() public returns (Groth16Verifier) {   
     vm.startBroadcast();
 
     groth16Verifier = new Groth16Verifier();
